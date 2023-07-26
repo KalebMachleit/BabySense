@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BabySense",
-    "slug": "BabySense",
+    "slug": "babysense",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d55628d2-c70b-4e26-b963-b3b7ce692a6c"
+      }
+    },
+    "owner": "kalebm25"
   }
 }
