@@ -7,7 +7,9 @@ import HomeScreen from './pages/HomeScreen';
 import AlertsScreen from './pages/AlertsScreen';
 import * as Notifications from 'expo-notifications';
 import TestNotification from './pages/TestNotification';
-
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
 
 
 

@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform } from 'react-native';
+import { Text, View, Button, Platform, StyleSheet } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import useInterval from '../polling/useInterval';
+import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
 
 let sensorData = []
 let tempAverage = 0
 let humidityAverage = 0
+let notificationData = []
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -71,10 +74,12 @@ async function sendPushNotification(expoPushToken) {
   const message = {
     to: expoPushToken,
     sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
-    data: { someData: 'goes here' },
+    title: "Change Your Child's diaper!",
+    body: 'Click here to disable repeat.',
+    data: { timeStamp: new Date() },
   };
+
+  notificationData.push(message)
 
   await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',
@@ -129,6 +134,7 @@ async function registerForPushNotificationsAsync() {
 //   // console.log("Readings:" + reading + temperature + humidity)
 // }
 
+
 export default function TestNotification() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
@@ -152,17 +158,23 @@ export default function TestNotification() {
     };
   }, []);
 
-  useInterval(getAverages, 6000)
+  // useInterval(getAverages, 6000)
+
+  const [loaded] = useFonts({
+    Koulen: require('../assets/fonts/Koulen-Regular.ttf')
+  })
+  if (!loaded) {
+    return null;
+  }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}>
-      <Text>Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Title: {notification && notification.request.content.title} </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
+    <View style={{ flex: 1, alignItems: 'center', backgroundColor:'#D8ECFF'}}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>
+          CHANGE LOG
+        </Text>
       </View>
-      <Button
+      {/* <Button
         title="Press to Send Notification"
         onPress={async () => {
           await sendPushNotification(expoPushToken);
@@ -173,8 +185,26 @@ export default function TestNotification() {
         onPress={async () => {
           await getAverages()
         }}
-      />
+      /> */}
     </View>
   );
 }
+
+
+const styles = StyleSheet.create ({
+  header: {
+    width: 316,
+    height: 78,
+    backgroundColor: '#1D294F',
+    borderRadius: 39,
+    top: 62,
+  },
+  headerText: {
+    fontSize: 48,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontFamily: 'Koulen'
+  },
+  
+})
 
