@@ -52,6 +52,7 @@ export default function App() {
     return <AppLoading/>;
   }
   
+  const test = 'hi'
 
   return (
     <NavigationContainer>

@@ -5,13 +5,14 @@ import AppLoading from 'expo-app-loading'
 import LogItem from '../components/LogItem';
 import { useEffect, useState, useContext } from 'react';
 import { CurrentRenderContext } from '@react-navigation/native';
+import useNotificationData from '../hooks/useNotificationData';
 
 const AlertsScreen = ({ navigation, route }) => { 
+    const { storedNotifications, setStoredNotifications} = useNotificationData()
     const [data, setData] = useState()
     const [day, setDay] = useState(27)
     const [month, setMonth] = useState(8)
     const [year, setYear] = useState(2023)
-    const [storedNotifications, setStoredNotifications] = useState(notifications)
 
     useEffect(() => {
       sortData(day, month, year)
@@ -61,7 +62,7 @@ const AlertsScreen = ({ navigation, route }) => {
       <Button
         title="Update Info"
         onPress={() => {
-            let newSet = storedNotifications
+            let newSet = [...storedNotifications]
             newSet.push({
                 timestamp: "2023-08-24"
             })
@@ -102,44 +103,6 @@ const notifications = [
         timestamp: "2023-08-02"
     },
 ]
-
-const testData = [
-    {
-      date: '8-21',
-      alertNum: 3,
-      id: 1
-    },
-    {
-      date: '8-22',
-      alertNum: 3,
-      id: 2
-    },
-    {
-      date: '8-23',
-      alertNum: 3,
-      id: 3
-    },
-    {
-      date: '8-24',
-      alertNum: 3,
-      id: 4
-    },
-    {
-      date: '8-25',
-      alertNum: 3,
-      id: 5
-    },
-    {
-      date: '8-26',
-      alertNum: 3,
-      id: 6
-    },
-    {
-      date: '8-27',
-      alertNum: 3,
-      id: 7
-    },
-  ]
 
 export default AlertsScreen
 

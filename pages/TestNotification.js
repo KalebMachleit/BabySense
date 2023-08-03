@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading'
 import LogItem from '../components/LogItem';
+import useNotificationData from '../hooks/useNotificationData';
 
 
 let sensorData = []
@@ -146,6 +147,7 @@ async function registerForPushNotificationsAsync() {
 
 
 export default function TestNotification() {
+  const { storedNotifications, setStoredNotifications} = useNotificationData()
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
@@ -191,6 +193,16 @@ export default function TestNotification() {
           sortData()
         }}
       />
+      <Button
+        title="does this work?"
+        onPress={() => {
+          let newSet = [...storedNotifications]
+          newSet.push({
+              timestamp: "2023-08-24"
+          })
+          setStoredNotifications(newSet)
+      }}/>
+      <Text>{storedNotifications.length}</Text>
     </View>
   );
 }
