@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading'
 import LogItem from '../components/LogItem';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { CurrentRenderContext } from '@react-navigation/native';
 
 const AlertsScreen = ({ navigation, route }) => { 
@@ -14,21 +14,8 @@ const AlertsScreen = ({ navigation, route }) => {
     const [storedNotifications, setStoredNotifications] = useState(notifications)
 
     useEffect(() => {
-      let newData = []
-      for (let i = 0; i <= 6; i++) {
-        let date = new Date(year, (month - 1), day)
-        let xDaysAgo = date.setDate(date.getDate() - i)
-        let result = new Date(xDaysAgo).toJSON().slice(0, 10)
-        const hits = storedNotifications.filter(x => x.timestamp == result).length
-        // console.log(result, 'Number of matches:', storedNotifications.filter(x => x.timestamp == result).length)
-        newData.push({
-            date: result.slice(5, 10),
-            alertNum: hits,
-            id: i
-        })
-      }
-      setData(newData)
-      }, [storedNotifications])
+      sortData(day, month, year)
+      }, [storedNotifications]);
 
       const sortData = (day, month, year) => {
         let newData = []
@@ -74,11 +61,11 @@ const AlertsScreen = ({ navigation, route }) => {
       <Button
         title="Update Info"
         onPress={() => {
-            let oldSet = storedNotifications
-            oldSet.push({
+            let newSet = storedNotifications
+            newSet.push({
                 timestamp: "2023-08-24"
             })
-            setStoredNotifications(oldSet)
+            setStoredNotifications(newSet)
         }}/>
     </View>
     )
