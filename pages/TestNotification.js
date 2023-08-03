@@ -1,15 +1,27 @@
 import { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform, StyleSheet } from 'react-native';
+import { Text, View, Button, Platform, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import useInterval from '../polling/useInterval';
 import { useFonts } from 'expo-font';
 import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading'
+import LogItem from '../components/LogItem';
+
 
 let sensorData = []
 let tempAverage = 0
 let humidityAverage = 0
 let notificationData = []
+
+const sortData = () => {
+
+  let currentDate = new Date().toJSON().slice(0, 10);
+  console.log(currentDate)
+
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)  
+  console.log(sevenDaysAgo.toJSON().slice(0, 10))
+}
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -76,10 +88,18 @@ async function sendPushNotification(expoPushToken) {
     sound: 'default',
     title: "Change Your Child's diaper!",
     body: 'Click here to disable repeat.',
-    data: { timeStamp: new Date() },
+    data: {},
   };
 
-  notificationData.push(message)
+  const date = new Date();
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  let currentDate = `${day}-${month}-${year}`;
+
+  notificationData.push({timeStamp: currentDate})
 
   await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',
@@ -124,16 +144,6 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
-// async function getAverages() {
-//   console.log("think!")
-//   // let reading = []
-//   // let temperature = await fetch("http://192.168.87.208/").then(response => response.temp)
-//   // let humidity = await fetch("http://192.168.87.208/").then(response => response.humidity)
-//   // reading.push(temperature)
-//   // reading.push(humidity)
-//   // console.log("Readings:" + reading + temperature + humidity)
-// }
-
 
 export default function TestNotification() {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -160,21 +170,10 @@ export default function TestNotification() {
 
   // useInterval(getAverages, 6000)
 
-  const [loaded] = useFonts({
-    Koulen: require('../assets/fonts/Koulen-Regular.ttf')
-  })
-  if (!loaded) {
-    return null;
-  }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', backgroundColor:'#D8ECFF'}}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>
-          CHANGE LOG
-        </Text>
-      </View>
-      {/* <Button
+    <View style={{ flex: 1, alignItems: 'center', backgroundColor:'#D8ECFF', justifyContent:"center"}}>
+      <Button
         title="Press to Send Notification"
         onPress={async () => {
           await sendPushNotification(expoPushToken);
@@ -185,26 +184,18 @@ export default function TestNotification() {
         onPress={async () => {
           await getAverages()
         }}
-      /> */}
+      />
+      <Button
+        title="Get date range"
+        onPress={() => {
+          sortData()
+        }}
+      />
     </View>
   );
 }
 
 
 const styles = StyleSheet.create ({
-  header: {
-    width: 316,
-    height: 78,
-    backgroundColor: '#1D294F',
-    borderRadius: 39,
-    top: 62,
-  },
-  headerText: {
-    fontSize: 48,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontFamily: 'Koulen'
-  },
-  
 })
 

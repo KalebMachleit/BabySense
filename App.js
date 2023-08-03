@@ -10,9 +10,13 @@ import TestNotification from './pages/TestNotification';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 
+const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -40,16 +44,50 @@ export default function App() {
   //   registerForPushNotificationsAsync();
   // }, []);
 
+  const [loaded] = useFonts({
+    Koulen: require('./assets/fonts/Koulen-Regular.ttf')
+  })
+  if (!loaded) {
+    console.log('why wont you work')
+    return <AppLoading/>;
+  }
+  
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-        />
-        <Stack.Screen name="Alerts" component={AlertsScreen}/>
-        <Stack.Screen name="TestNotifications" component={TestNotification}/>
-      </Stack.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: '#1D294F',
+            height: 60
+          },
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Alerts') {
+              iconName = focused
+                ? 'chart-box'
+                : 'chart-box-outline';
+            } else if (route.name === 'TestNotifications') {
+              iconName = focused ? 'information' : 'information-outline';
+            } else if (route.name === 'Home') {
+              iconName = focused ? 'home-circle' : 'home-circle-outline';
+            }
+
+            // You can return any component that you like here!
+            return <MaterialCommunityIcons name={iconName} size={40} color={color} />;
+          },
+          tabBarActiveTintColor: '#D8ECFF',
+          tabBarInactiveTintColor: '#D8ECFF',
+        })}
+        style={styles.navbar}
+      >
+        <Tab.Screen name="Home" component={HomeScreen}/>
+        <Tab.Screen name="Alerts" component={AlertsScreen} />
+        <Tab.Screen name="TestNotifications" component={TestNotification} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
@@ -61,6 +99,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  navbar: {
+    backgroundColor: '#1D294F'
+  }
 });
 
 
