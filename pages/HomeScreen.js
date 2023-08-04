@@ -7,9 +7,22 @@ import Svg, {
 import { SvgXml } from 'react-native-svg';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading'
-  
+import * as Notifications from 'expo-notifications';
+import { useRef } from 'react';
 
 const HomeScreen = ({navigation}) => {
+    const responseListener = useRef();
+    const notificationListener = useRef();
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        console.log(response);
+        navigation.navigate('Notif')
+      });
+    
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        navigation.navigate('Notif')
+    });
+    
     return (
         <View style={{flex:1, alignItems: 'center', backgroundColor: '#D8ECFF'}}>
             <View style={styles.baby}>

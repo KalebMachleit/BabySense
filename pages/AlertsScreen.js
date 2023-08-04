@@ -6,17 +6,32 @@ import LogItem from '../components/LogItem';
 import { useEffect, useState, useContext } from 'react';
 import { CurrentRenderContext } from '@react-navigation/native';
 import useNotificationData from '../hooks/useNotificationData';
+import { NotifContext } from '../App';
 
 const AlertsScreen = ({ navigation, route }) => { 
-    const { storedNotifications, setStoredNotifications} = useNotificationData()
+    const notifs = useContext(NotifContext)
+    // const { storedNotifications, setStoredNotifications} = useNotificationData()
     const [data, setData] = useState()
     const [day, setDay] = useState(27)
     const [month, setMonth] = useState(8)
     const [year, setYear] = useState(2023)
+    const [today, setToday] = useState('')
+    const [sevenDaysAgo, setSevenDaysAgo] = useState('')
+
+    useEffect(() => {
+        setDay(new Date().getDate())
+        setMonth(new Date().getMonth())
+        setYear(new Date().getFullYear())
+        let date = new Date().toString().slice(0, 10)
+        let today = new Date()
+        let sevenDaysAgo = today.setDate(today.getDate() - 7)
+        setToday(date)
+        setSevenDaysAgo(new Date(sevenDaysAgo).toString().slice(0,10))
+    }, [])
 
     useEffect(() => {
       sortData(day, month, year)
-      }, [storedNotifications]);
+      }, [notifs]);
 
       const sortData = (day, month, year) => {
         let newData = []
@@ -27,13 +42,12 @@ const AlertsScreen = ({ navigation, route }) => {
         // console.log(result, 'Number of matches:', storedNotifications.filter(x => x.timestamp == result).length)
         newData.push({
             date: result.slice(5, 10),
-            alertNum: storedNotifications.filter(x => x.timestamp == result).length,
+            alertNum: notifs.filter(x => x.timestamp == result).length,
             id: i
         })
       }
       setData(newData)
     }
-
     return (
         <View style={{ flex: 1, alignItems: 'center', backgroundColor:'#D8ECFF'}}>
       <View style={styles.header}>
@@ -43,7 +57,7 @@ const AlertsScreen = ({ navigation, route }) => {
       </View>
       <TouchableOpacity style={styles.dates}>
         <Text style={styles.datesText}>
-          August 21-27 2023
+          {today} - {sevenDaysAgo}
         </Text>
       </TouchableOpacity>
       <FlatList
@@ -52,57 +66,10 @@ const AlertsScreen = ({ navigation, route }) => {
         keyExtractor={item => item.id}
         style={styles.list}
         extraData={data}
-      ></FlatList>
-      <Button
-        title="Reload"
-        onPress={() => {
-          sortData(27, 8, 2023)
-        }}
       />
-      <Button
-        title="Update Info"
-        onPress={() => {
-            let newSet = [...storedNotifications]
-            newSet.push({
-                timestamp: "2023-08-24"
-            })
-            setStoredNotifications(newSet)
-        }}/>
     </View>
     )
 }
-
-
-
-const notifications = [
-    {
-        timestamp: "2023-08-24"
-    },
-    {
-        timestamp: "2023-08-21"
-    },
-    {
-        timestamp: "2023-08-23"
-    },
-    {
-        timestamp: "2023-08-22"
-    },
-    {
-        timestamp: "2023-08-22"
-    },
-    {
-        timestamp: "2023-08-27"
-    },
-    {
-        timestamp: "2023-08-02"
-    },
-    {
-        timestamp: "2023-08-24"
-    },
-    {
-        timestamp: "2023-08-02"
-    },
-]
 
 export default AlertsScreen
 

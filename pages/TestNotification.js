@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { Text, View, Button, Platform, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -8,6 +8,7 @@ import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading'
 import LogItem from '../components/LogItem';
 import useNotificationData from '../hooks/useNotificationData';
+import { NotifContext } from '../App';
 
 
 let sensorData = []
@@ -147,6 +148,7 @@ async function registerForPushNotificationsAsync() {
 
 
 export default function TestNotification() {
+  const notifs = useContext(NotifContext)
   const { storedNotifications, setStoredNotifications} = useNotificationData()
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
@@ -171,7 +173,7 @@ export default function TestNotification() {
   }, []);
 
   // useInterval(getAverages, 6000)
-
+  
 
   return (
     <View style={{ flex: 1, alignItems: 'center', backgroundColor:'#D8ECFF', justifyContent:"center"}}>
@@ -202,7 +204,7 @@ export default function TestNotification() {
           })
           setStoredNotifications(newSet)
       }}/>
-      <Text>{storedNotifications.length}</Text>
+      <Text>{notifs.length}</Text>
     </View>
   );
 }
