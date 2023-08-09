@@ -228,7 +228,6 @@ export default function App() {
             tabBarActiveTintColor: '#D8ECFF',
             tabBarInactiveTintColor: '#D8ECFF',
           })}
-          style={styles.navbar}
         >
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Alerts" component={AlertsScreen} />
