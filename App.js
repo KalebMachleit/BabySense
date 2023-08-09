@@ -106,7 +106,7 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  
+
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
@@ -116,7 +116,7 @@ export default function App() {
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       // console.log(response);
-      
+
     });
 
     return () => {
@@ -125,7 +125,7 @@ export default function App() {
     };
   }, []);
 
-  useInterval(getAverages, 6000)
+  // useInterval(getAverages, 6000)
 
   const { storedNotifications, setStoredNotifications } = useNotificationData()
 
@@ -139,13 +139,13 @@ export default function App() {
 
   async function getAverages() {
     console.log("getting info:")
-    fetch("http://192.168.87.229/")
+    fetch("http://192.168.235.229/")
       .then((res) => {
         return res.json()
       })
       .then((data) => {
         if (sensorData.length >= 10) {
-          
+
           sensorData.shift()
           sensorData.push(data)
           tempAverage = 0
@@ -153,22 +153,23 @@ export default function App() {
           sensorData.push(data)
           const tempData = sensorData.map(x => x.temp)
           tempData.forEach(x => tempAverage += x)
-          tempAverage = tempAverage/tempData.length
+          tempAverage = tempAverage / tempData.length
           const humidityData = sensorData.map(x => x.humidity)
           humidityData.forEach(x => humidityAverage += x)
-          humidityAverage = humidityAverage/humidityData.length
+          humidityAverage = humidityAverage / humidityData.length
           console.log("Temperature average:" + tempAverage)
           // console.log("Temperature data:"+tempData)
-          console.log("Humidity average:"+humidityAverage)
+          console.log("Humidity average:" + humidityAverage)
           // console.log("Humidity data:"+humidityData)
           if (data.humidity - humidityAverage > 10) {
             console.log("Alert!")
-              let newSet = [...storedNotifications]
-              newSet.push({
-                  timestamp: "2023-08-24"
-              })
-              setStoredNotifications(newSet)
-              sendPushNotification(expoPushToken)
+            let newSet = [...storedNotifications]
+            newSet.push({
+              timestamp: new Date().toJSON().slice(0, 10)
+            })
+            setStoredNotifications(newSet)
+            sendPushNotification(expoPushToken)
+            console.log(storedNotifications)
           }
           // console.log(sensorData)
         } else {
@@ -177,19 +178,19 @@ export default function App() {
           sensorData.push(data)
           const tempData = sensorData.map(x => x.temp)
           tempData.forEach(x => tempAverage += x)
-          tempAverage = tempAverage/tempData.length
+          tempAverage = tempAverage / tempData.length
           const humidityData = sensorData.map(x => x.humidity)
           humidityData.forEach(x => humidityAverage += x)
-          humidityAverage = humidityAverage/humidityData.length
+          humidityAverage = humidityAverage / humidityData.length
           console.log("Temperature average:" + tempAverage)
           // console.log("Temperature data:"+tempData)
-          console.log("Humidity average:"+humidityAverage)
+          console.log("Humidity average:" + humidityAverage)
           // console.log("Humidity data:"+humidityData)
           // console.log(sensorData)
         }
       })
   }
-  
+
   return (
     <NotifContext.Provider value={storedNotifications}>
       <NavigationContainer>
@@ -199,14 +200,14 @@ export default function App() {
             tabBarShowLabel: false,
             tabBarStyle: {
               backgroundColor: '#1D294F',
-              height: 60
+              height: '7%'
             },
             tabBarButton: [
               "Notif", "TestNotifications"
             ].includes(route.name)
               ? () => {
-                  return null;
-                }
+                return null;
+              }
               : undefined,
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;

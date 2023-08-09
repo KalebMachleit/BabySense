@@ -17,17 +17,17 @@ const styles = StyleSheet.create({
     item: {
         flex: 1,
         flexDirection: 'row',
-        marginVertical: 4
+        marginVertical: 4,
     },
     left: {
-        width: 140,
+        width: '40%',
         height: 50,
         backgroundColor: '#1D294F',
         borderTopLeftRadius: 25,
         borderBottomLeftRadius: 25,
     },
     right: {
-        width: 140,
+        width: '40%',
         height: 50,
         backgroundColor: '#255792',
         borderBottomRightRadius: 25,

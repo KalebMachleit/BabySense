@@ -24,19 +24,19 @@ const AlertsScreen = ({ navigation, route }) => {
         setYear(new Date().getFullYear())
         let date = new Date().toString().slice(0, 10)
         let today = new Date()
-        let sevenDaysAgo = today.setDate(today.getDate() - 7)
+        let sevenDaysAgo = today.setDate(today.getDate() - 6)
         setToday(date)
         setSevenDaysAgo(new Date(sevenDaysAgo).toString().slice(0,10))
     }, [])
 
     useEffect(() => {
       sortData(day, month, year)
-      }, [notifs]);
+      }, [notifs, today]);
 
       const sortData = (day, month, year) => {
         let newData = []
       for (let i = 0; i <= 6; i++) {
-        let date = new Date(year, (month - 1), day)
+        let date = new Date(year, month, day)
         let xDaysAgo = date.setDate(date.getDate() - i)
         let result = new Date(xDaysAgo).toJSON().slice(0, 10)
         // console.log(result, 'Number of matches:', storedNotifications.filter(x => x.timestamp == result).length)
@@ -75,7 +75,7 @@ export default AlertsScreen
 
 const styles = StyleSheet.create ({
     header: {
-      width: 316,
+      width: '90%',
       height: 78,
       backgroundColor: '#1D294F',
       borderRadius: 39,
@@ -88,11 +88,11 @@ const styles = StyleSheet.create ({
       fontFamily: 'Koulen'
     },
     dates: {
-      width: 280,
+      width: '80%',
       height: 50,
       backgroundColor: '#255792',
       borderRadius: 25,
-      top: 120,
+      top: '15%',
     },
     datesText: {
       fontSize: 25,
@@ -101,8 +101,10 @@ const styles = StyleSheet.create ({
       fontFamily: 'Koulen'
     },
     list: {
-      top: 180,
-      borderRadius: 25,
+      top: '20%',
+      width: '100%',
+      left: '10%',
+      marginBottom: '10%'
     }
   })
   
