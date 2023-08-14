@@ -112,6 +112,11 @@ export default function App() {
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
+      let newSet = [...storedNotifications]
+            newSet.push({
+              timestamp: new Date().toJSON().slice(0, 10)
+            })
+            setStoredNotifications(newSet)
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
